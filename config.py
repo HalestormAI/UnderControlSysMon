@@ -1,6 +1,7 @@
 import argparse
 import logging
-from typing import Any, Dict, TypeVar
+from pathlib import Path
+from typing import Any, Dict, TypeVar, List
 
 import toml
 
@@ -9,7 +10,27 @@ from logger import logger
 _config = {}
 
 
-def parse_args(default_args: Dict =None) -> argparse.Namespace:
+ValueType = TypeVar('T')
+
+
+class ConfigError(Exception):
+    pass
+
+
+def check_dir_paths(paths: List[str]):
+    for p in paths:
+        if not Path(p).is_dir():
+            raise ConfigError(
+                f"The path '{p}' does not exist - cannot check for disk usage.")
+
+
+def parse_args(default_args: Dict = None) -> argparse.Namespace:
+
+    class ReadableDirectoryPath(argparse.Action):
+        def __call__(self, parser: argparse.ArgumentParser, namespace: argparse.Namespace, values: List[str], option_string: str = None):
+            check_dir_paths(values)
+            setattr(namespace, self.dest, values)
+
     parser = argparse.ArgumentParser(
         description="A small program to gather system stats and publish to a web service.")
     parser.add_argument("--config", default=None,
@@ -23,18 +44,20 @@ def parse_args(default_args: Dict =None) -> argparse.Namespace:
     group = parser.add_argument_group("Stats")
     group.add_argument("--per-cpu", action="store_true",
                        help="Display stats such as CPU Frequency per core, rather than a holistic value.")
-    group.add_argument("--disks", type=str, nargs="*",
+    group.add_argument("--disks", action=ReadableDirectoryPath, nargs="*",
                        help="Paths to disks that should be monitored for usage.")
 
     if c_args.config is not None:
         with open(c_args.config, "r") as fh:
             config_defaults = toml.load(fh)
+            if "disks" in config_defaults:
+                check_dir_paths(config_defaults["disks"])
         parser.set_defaults(**config_defaults)
 
     return parser.parse_args(remaining_args)
 
-ValueType = TypeVar('T')
-def get(key: str, default_val: ValueType=None) -> ValueType:
+
+def get(key: str, default_val: ValueType = None) -> ValueType:
     return _config.get(key, default_val)
 
 
