@@ -34,6 +34,10 @@ def parse_args(default_args: Dict = None) -> argparse.Namespace:
                         help="Path to the config file from which to load arguments. Can be overriden on the command line.")
     c_args, remaining_args = parser.parse_known_args()
 
+    parser.add_argument("--no-force-pi", action="store_false",
+                        help="By default, the script will error if it doesn't detect the RPi model file. "
+                             "This argument will allow execution to continue, with a warning.")
+
     group = parser.add_argument_group("Server Config")
     group.add_argument("--host", default="0.0.0.0",
                        help="The server host. Set to 0.0.0.0 to listen for connections on all NICs.")

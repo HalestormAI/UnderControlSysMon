@@ -17,6 +17,32 @@ app = FastAPI(debug=True)
 T = TypeVar("T")
 NestedDefaultDict = defaultdict
 
+RPI_MODEL_FILE = "/sys/firmware/devicetree/base/model"
+
+
+def check_pi(raise_error: bool = True) -> bool:
+
+    def do_error():
+        message = "This script is designed specifically for use on a Raspberry Pi."
+        if raise_error:
+            message += " To attempt to run anyway, call with the argument --no-force-pi."
+        if raise_error:
+            raise SystemError(message)
+        else:
+            logger.warning(message)
+
+    try:
+        content = open(RPI_MODEL_FILE, "r").read()
+        logger.debug(f"Platform detected as [{content}].")
+        if "Raspberry Pi" in content:
+            return True
+        else:
+            do_error()
+            return False
+    except FileNotFoundError:
+        logger.debug(f"Platform file not found.")
+        do_error()
+        return False
 
 def nested_defaultdict() -> defaultdict: return defaultdict(nested_defaultdict)
 
