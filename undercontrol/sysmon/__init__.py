@@ -61,6 +61,12 @@ def get_stats(per_cpu: bool = True, disks_to_monitor: Optional[List[str]] = None
             freq = [freq]
         return [i._asdict() for i in make_iterable(freq)]
 
+    try:
+        model_info = open("/sys/firmware/devicetree/base/model").read().replace('\u0000', '')
+    except FileNotFoundError:
+        model_info = "UNKNOWN"
+
+    stats["system"]["model"] = model_info
     stats["cpu"]["freq"] = get_freq()
     stats["cpu"]["perc"] = make_iterable(psutil.cpu_percent(percpu=per_cpu))
 
