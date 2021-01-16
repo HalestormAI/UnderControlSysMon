@@ -39,6 +39,10 @@ def parse_args(default_args: Dict = None) -> argparse.Namespace:
                        help="The server host. Set to 0.0.0.0 to listen for connections on all NICs.")
     group.add_argument("--port", default=7653, type=int,
                        help="The server port.")
+    group.add_argument("--num-workers", type=int, default=1,
+                       help="Number of concurrent workers for the web-service.")
+    group.add_argument("--reload", action="store_true",
+                       help="Enable auto-reload. Not advisable when running as a service")
     group = parser.add_argument_group("Stats")
     group.add_argument("--per-cpu", action="store_true",
                        help="Display stats such as CPU Frequency per core, rather than a holistic value.")
