@@ -14,6 +14,7 @@ _config = {}
 class ConfigError(Exception):
     pass
 
+
 def check_dir_paths(paths: List[str]):
     for p in paths:
         if not Path(p).is_dir():
@@ -47,6 +48,7 @@ def parse_args(default_args: Dict = None) -> argparse.Namespace:
                        help="Number of concurrent workers for the web-service.")
     group.add_argument("--reload", action="store_true",
                        help="Enable auto-reload. Not advisable when running as a service")
+
     group = parser.add_argument_group("Stats")
     group.add_argument("--per-cpu", action="store_true",
                        help="Display stats such as CPU Frequency per core, rather than a holistic value.")

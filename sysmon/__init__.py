@@ -44,6 +44,7 @@ def check_pi(raise_error: bool = True) -> bool:
         do_error()
         return False
 
+
 def nested_defaultdict() -> defaultdict: return defaultdict(nested_defaultdict)
 
 
