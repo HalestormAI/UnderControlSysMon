@@ -8,8 +8,8 @@ import psutil
 import uvicorn
 from fastapi import FastAPI
 
-import logger
-import config
+from .logger import logger
+import sysmon.config as config
 
 app = FastAPI(debug=True)
 
@@ -57,10 +57,3 @@ def get_stat_summary() -> Dict:
     return {
         "stats": get_stats(per_cpu, disks)
     }
-
-
-if __name__ == "__main__":
-    config.load()
-    logger.setup_logger(config.get("log_level", logging.INFO))
-    config.log()
-    uvicorn.run(app, host=config.get("host"), port=config.get("port"))

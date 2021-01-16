@@ -5,17 +5,14 @@ from typing import Any, Dict, TypeVar, List
 
 import toml
 
-from logger import logger
-
-_config = {}
-
+from .logger import logger
 
 ValueType = TypeVar('T')
+_config = {}
 
 
 class ConfigError(Exception):
     pass
-
 
 def check_dir_paths(paths: List[str]):
     for p in paths:
@@ -37,10 +34,11 @@ def parse_args(default_args: Dict = None) -> argparse.Namespace:
                         help="Path to the config file from which to load arguments. Can be overriden on the command line.")
     c_args, remaining_args = parser.parse_known_args()
 
-    parser.add_argument("--host", default="0.0.0.0",
-                        help="The server host. Set to 0.0.0.0 to listen for connections on all NICs.")
-    parser.add_argument("--port", default=7653, type=int,
-                        help="The server port.")
+    group = parser.add_argument_group("Server Config")
+    group.add_argument("--host", default="0.0.0.0",
+                       help="The server host. Set to 0.0.0.0 to listen for connections on all NICs.")
+    group.add_argument("--port", default=7653, type=int,
+                       help="The server port.")
     group = parser.add_argument_group("Stats")
     group.add_argument("--per-cpu", action="store_true",
                        help="Display stats such as CPU Frequency per core, rather than a holistic value.")
