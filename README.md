@@ -14,7 +14,7 @@ requirements. Assuming you're using `virtualenvwrapper`:
 
 ```bash
 $ mkvirtualenv venv
-$ pip install -r requirements.txt
+$ pip install .
 ```
 
 Note: Script requires Python 3, the above assumes `virtualenvwrapper` has
@@ -27,6 +27,29 @@ From the root directory, simply call:
 ```bash
 $ workon venv
 $ python -m undercontrol.sysmon [--config ...]
+```
+
+## Installing as a service
+There is a custom command for the setup script, that will install the sysmon
+package as a service to run at boot.
+
+In the simplest case, the following will install the script as a user unit
+in the user's systemd directory. If it doesn't exist already (which it didn't
+on my device), the script will create it and its parents. This behaviour
+can be disabled using the `--no-create-install-path` argument to the setup
+script.
+
+It's likely you'll want to provide the TOML config file, this is done using
+the `--config` parameter. The script will convert relative paths to absolute.
+
+```bash
+$ python setup.py systemd_install --config config.toml
+```
+
+For full details on the possible arguments, run:
+
+```bash
+$ python setup.py --help systemd_install
 ```
 
 ## Configuration
