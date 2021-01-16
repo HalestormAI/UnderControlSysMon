@@ -5,6 +5,21 @@ requested.
 
 Currently only has a single endpoint, which will return all stats.
 
+Tested with Python 3.7 on a Raspberry Pi 4, Model B.
+
+## Basic Setup
+
+Nothing unusual here, create your virtual environment and install the
+requirements. Assuming you're using `virtualenvwrapper`:
+
+```bash
+$ mkvirtualenv venv
+$ pip install -r requirements.txt
+```
+
+Note: Script requires Python 3, the above assumes `virtualenvwrapper` has
+been configured with Python 3 as default.
+
 ## Running
 
 From the root directory, simply call:
