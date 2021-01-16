@@ -26,7 +26,7 @@ From the root directory, simply call:
 
 ```bash
 $ workon venv
-$ python -m sysmon [--config ...]
+$ python -m undercontrol.sysmon [--config ...]
 ```
 
 ## Configuration

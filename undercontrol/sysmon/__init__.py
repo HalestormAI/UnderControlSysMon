@@ -9,7 +9,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from .logger import logger
-import sysmon.config as config
+import undercontrol.sysmon.config as config
 
 app = FastAPI(debug=True)
 
