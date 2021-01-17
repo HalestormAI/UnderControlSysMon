@@ -52,6 +52,25 @@ For full details on the possible arguments, run:
 $ python setup.py --help systemd_install
 ```
 
+### Creating as a system service
+The above requires the user to log into the device, which is not always
+preferable. If you'd prefer to run as a system daemon, the procedure is
+similar to the above, except you'll need root permissions.
+
+Also, provide the `--system` flag to configure the path defaults for
+system services.
+
+Since switching to root removes us from the venv environment, we need to
+explicitly call the python binary from the venv (you can find this path
+using `which`):
+
+```bash
+$ workon undercontrol-sysmon
+$ which python
+<sysmon_venv_path>/bin/python
+$ sudo <sysmon_venv_path>/bin/python setup.py systemd_install --config-file config.toml --system
+```
+
 ## Configuration
 Can be configured using a TOML config file, which should be provided using the
 `--config` command line argument. Values supplied in the config file will

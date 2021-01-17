@@ -6,4 +6,4 @@ WorkingDirectory={TPL_WORKING_DIRECTORY}
 ExecStart={TPL_EXEC_START}
 
 [Install]
-WantedBy=default.target
+WantedBy={TPL_TARGET}
