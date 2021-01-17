@@ -7,6 +7,7 @@ import psutil
 
 import uvicorn
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from .logger import logger
 import undercontrol.sysmon.config as config
@@ -14,11 +15,22 @@ import undercontrol.sysmon.config as config
 app = FastAPI(debug=True)
 
 
+
 T = TypeVar("T")
 NestedDefaultDict = defaultdict
 
 RPI_MODEL_FILE = "/sys/firmware/devicetree/base/model"
 
+
+def set_cors(app, origins):
+    logging.info(f"Enabling CORS middleware for origins: {origins}")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 def check_pi(raise_error: bool = True) -> bool:
 

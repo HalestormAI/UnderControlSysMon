@@ -74,3 +74,9 @@ add the following to your `config.toml`:
 ```toml
 per_cpu = true
 ```
+
+## CORS
+If performing a front-end `fetch` on the server, you'll likely need to enable
+CORS exceptions through the middleware. This is done by passing a list of
+allowable domains to the `--cors-origins` flag. If no origins are provided,
+the CORS middleware will not be enabled.

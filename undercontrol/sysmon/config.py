@@ -48,6 +48,8 @@ def parse_args(default_args: Dict = None) -> argparse.Namespace:
                        help="Number of concurrent workers for the web-service.")
     group.add_argument("--reload", action="store_true",
                        help="Enable auto-reload. Not advisable when running as a service")
+    group.add_argument("--cors-origins", type=str, nargs="*",
+                       help="A set of origins to allow through the CORS middleware")
 
     group = parser.add_argument_group("Stats")
     group.add_argument("--per-cpu", action="store_true",
