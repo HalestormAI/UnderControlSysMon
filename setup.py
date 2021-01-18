@@ -121,6 +121,7 @@ setup(name='undercontrol-sysmon',
           "fastapi",
           "uvicorn[standard]",
           "psutil",
-          "toml"
+          "toml",
+          "fastapi-socketio"
       ],
       cmdclass={'systemd_install': SystemdInstallerCommand})
