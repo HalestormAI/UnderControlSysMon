@@ -1,19 +1,21 @@
 import asyncio
 from collections import defaultdict
 from collections.abc import Iterable
-from typing import Dict, TypeVar, Optional, List, Union, Callable
 
 import psutil
+from typing import Dict, TypeVar, List, Union, Callable
 
-from .models.stats_model import StatsInfo
-from .logger import logger
 from . import config
+from .logger import logger
+from .models.stats_model import StatsInfo
 
 NestedDefaultDict = defaultdict
 
 RPI_MODEL_FILE = "/sys/firmware/devicetree/base/model"
 
 T = TypeVar("T")
+
+
 def nested_defaultdict() -> defaultdict: return defaultdict(nested_defaultdict)
 
 

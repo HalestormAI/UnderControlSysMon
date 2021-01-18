@@ -1,9 +1,8 @@
 import argparse
-import logging
 from pathlib import Path
-from typing import Any, Dict, TypeVar, List
 
 import toml
+from typing import Dict, TypeVar, List
 
 from .logger import logger
 
@@ -23,9 +22,9 @@ def check_dir_paths(paths: List[str]):
 
 
 def parse_args(default_args: Dict = None) -> argparse.Namespace:
-
     class ReadableDirectoryPath(argparse.Action):
-        def __call__(self, parser: argparse.ArgumentParser, namespace: argparse.Namespace, values: List[str], option_string: str = None):
+        def __call__(self, parser: argparse.ArgumentParser, namespace: argparse.Namespace, values: List[str],
+                     option_string: str = None):
             check_dir_paths(values)
             setattr(namespace, self.dest, values)
 

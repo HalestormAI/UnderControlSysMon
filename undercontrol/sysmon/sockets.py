@@ -1,11 +1,11 @@
-from typing import List, Dict
 import socketio
 from fastapi import FastAPI
+from typing import List, Dict
 
-from .logger import logger
-from .stats import StatsGrabber, get_stats
-from .models.stats_model import StatsInfo
 from . import config
+from .logger import logger
+from .models.stats_model import StatsInfo
+from .stats import StatsGrabber, get_stats
 
 
 class StatsSocketNamespace(socketio.AsyncNamespace):

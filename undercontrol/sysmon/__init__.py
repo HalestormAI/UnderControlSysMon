@@ -1,16 +1,15 @@
 import logging
-from typing import Dict, TypeVar, Optional, List, Union
 
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-from .logger import logger, setup_logger
-from .stats import get_stats, get_model
-from .sockets import StatsSocketManager
-from .models.stats_model import SysResponse
+from typing import List
 
 import undercontrol.sysmon.config as config
+from .logger import logger, setup_logger
+from .models.stats_model import SysResponse
+from .sockets import StatsSocketManager
+from .stats import get_stats, get_model
 
 
 def set_cors(app: FastAPI, origins: List[str]):
@@ -25,7 +24,6 @@ def set_cors(app: FastAPI, origins: List[str]):
 
 
 def check_pi(raise_error: bool = True) -> bool:
-
     def do_error():
         message = "This script is designed specifically for use on a Raspberry Pi."
         if raise_error:
