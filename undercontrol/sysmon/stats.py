@@ -1,10 +1,13 @@
+import asyncio
 from collections import defaultdict
 from collections.abc import Iterable
-from typing import Dict, TypeVar, Optional, List, Union
+from typing import Dict, TypeVar, Optional, List, Union, Callable
 
 import psutil
 
+from .models.stats_model import StatsInfo
 from .logger import logger
+from . import config
 
 NestedDefaultDict = defaultdict
 
@@ -17,6 +20,7 @@ def nested_defaultdict() -> defaultdict: return defaultdict(nested_defaultdict)
 def make_iterable(x: T) -> Union[T, List[T]]:
     return x if isinstance(x, Iterable) else [x]
 
+
 def get_model():
     try:
         return open(RPI_MODEL_FILE).read().replace('\u0000', '')
@@ -26,8 +30,11 @@ def get_model():
     return None
 
 
-def get_stats(per_cpu: bool = True, disks_to_monitor: Optional[List[str]] = None) -> NestedDefaultDict:
+def get_stats() -> StatsInfo:
     stats = nested_defaultdict()
+
+    per_cpu = config.get("per_cpu")
+    disks_to_monitor = config.get("disks")
 
     def get_freq() -> List[Dict]:
         freq = psutil.cpu_freq(percpu=per_cpu)
@@ -51,3 +58,29 @@ def get_stats(per_cpu: bool = True, disks_to_monitor: Optional[List[str]] = None
             stats["disk"][key] = psutil.disk_usage(key)._asdict()
 
     return stats
+
+
+class StatsGrabber:
+    def __init__(self, update_freq: float, callback: Callable[[], StatsInfo]):
+        self._task = None
+        self._update_freq = update_freq
+        self._callback = callback
+
+    @property
+    def is_running(self):
+        return self._task is not None
+
+    async def repeat_loop(self):
+        while True:
+            await asyncio.sleep(self._update_freq)
+            stats = get_stats()
+            await self._callback(StatsInfo(**stats).dict())
+
+    def start(self):
+        if not self.is_running:
+            self._task = asyncio.create_task(self.repeat_loop())
+
+    def stop(self):
+        if self.is_running:
+            self._task.cancel()
+            self._task = None

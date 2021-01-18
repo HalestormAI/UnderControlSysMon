@@ -7,6 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .logger import logger, setup_logger
 from .stats import get_stats, get_model
+from .sockets import StatsSocketManager
+from .models.stats_model import SysResponse
 
 import undercontrol.sysmon.config as config
 
@@ -42,16 +44,22 @@ def check_pi(raise_error: bool = True) -> bool:
     do_error()
     return False
 
+
 def create_app():
     app = FastAPI()
 
-    @app.get("/")
-    def get_stat_summary() -> Dict:
-        per_cpu = config.get("per_cpu", True)
-        disks = config.get("disks", None)
+    cors_origins = config.get("cors_origins")
+    if cors_origins:
+        set_cors(app, cors_origins)
+
+    @app.get("/", response_model=SysResponse)
+    def get_stat_summary() -> SysResponse:
         return {
-            "stats": get_stats(per_cpu, disks)
+            "stats": get_stats()
         }
+
+    ssm = StatsSocketManager(app)
+    ssm.create(cors_origins)
     return app
 
 
@@ -63,9 +71,6 @@ def run():
     check_pi(config.get("no_force_pi"))
 
     app = create_app()
-    cors_origins = config.get("cors_origins")
-    if cors_origins:
-        set_cors(app, cors_origins)
 
     uvicorn.run(app,
                 host=config.get("host"),

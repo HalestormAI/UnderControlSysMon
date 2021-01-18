@@ -51,6 +51,12 @@ def parse_args(default_args: Dict = None) -> argparse.Namespace:
     group.add_argument("--cors-origins", type=str, nargs="*",
                        help="A set of origins to allow through the CORS middleware")
 
+    group = parser.add_argument_group("Socket Config")
+    group.add_argument("--stats-namespace", type=str, default="/stats",
+                       help="The socket namespace to use for stats streaming")
+    group.add_argument("--stats-update-freq", type=float, default=1.0,
+                       help="How often to update the system stats when sockets are connected (in seconds).")
+
     group = parser.add_argument_group("Stats")
     group.add_argument("--per-cpu", action="store_true",
                        help="Display stats such as CPU Frequency per core, rather than a holistic value.")

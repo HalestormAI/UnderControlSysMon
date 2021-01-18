@@ -99,3 +99,13 @@ If performing a front-end `fetch` on the server, you'll likely need to enable
 CORS exceptions through the middleware. This is done by passing a list of
 allowable domains to the `--cors-origins` flag. If no origins are provided,
 the CORS middleware will not be enabled.
+
+
+## Socket Connection
+There is now a socket interface, using SocketsIO, under the namespace "/stats".
+
+Upon connection, the server will log the connection and start a periodic timer
+to query the system stats. Once the last device disconnects, the timer stops to
+ensure we don't gather stats when not needed.
+
+This runs independently to the HTTP GET endpoint.
