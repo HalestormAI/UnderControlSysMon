@@ -1,9 +1,8 @@
 import argparse
-import logging
 from pathlib import Path
-from typing import Any, Dict, TypeVar, List
 
 import toml
+from typing import Dict, TypeVar, List
 
 from .logger import logger
 
@@ -23,9 +22,9 @@ def check_dir_paths(paths: List[str]):
 
 
 def parse_args(default_args: Dict = None) -> argparse.Namespace:
-
     class ReadableDirectoryPath(argparse.Action):
-        def __call__(self, parser: argparse.ArgumentParser, namespace: argparse.Namespace, values: List[str], option_string: str = None):
+        def __call__(self, parser: argparse.ArgumentParser, namespace: argparse.Namespace, values: List[str],
+                     option_string: str = None):
             check_dir_paths(values)
             setattr(namespace, self.dest, values)
 
@@ -50,6 +49,12 @@ def parse_args(default_args: Dict = None) -> argparse.Namespace:
                        help="Enable auto-reload. Not advisable when running as a service")
     group.add_argument("--cors-origins", type=str, nargs="*",
                        help="A set of origins to allow through the CORS middleware")
+
+    group = parser.add_argument_group("Socket Config")
+    group.add_argument("--stats-namespace", type=str, default="/stats",
+                       help="The socket namespace to use for stats streaming")
+    group.add_argument("--stats-update-freq", type=float, default=1.0,
+                       help="How often to update the system stats when sockets are connected (in seconds).")
 
     group = parser.add_argument_group("Stats")
     group.add_argument("--per-cpu", action="store_true",

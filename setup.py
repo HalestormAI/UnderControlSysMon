@@ -1,8 +1,7 @@
 import sys
-from distutils.core import setup
 from distutils.cmd import Command
+from distutils.core import setup
 from pathlib import Path
-
 
 SYSTEM_INSTALL_PATH = "/etc/systemd/system"
 USER_INSTALL_PATH = ".config/systemd/user"
@@ -121,6 +120,7 @@ setup(name='undercontrol-sysmon',
           "fastapi",
           "uvicorn[standard]",
           "psutil",
-          "toml"
+          "toml",
+          "fastapi-socketio"
       ],
       cmdclass={'systemd_install': SystemdInstallerCommand})
