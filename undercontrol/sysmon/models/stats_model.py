@@ -4,6 +4,7 @@ from typing import Dict, Optional, List
 
 class SystemInfo(BaseModel):
     model: str
+    hostname: str
 
 
 class CpuFreqInfo(BaseModel):

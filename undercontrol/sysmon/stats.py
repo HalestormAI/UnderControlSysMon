@@ -1,7 +1,7 @@
 import asyncio
 from collections import defaultdict
 from collections.abc import Iterable
-
+import socket
 import psutil
 from typing import Dict, TypeVar, List, Union, Callable
 
@@ -45,6 +45,7 @@ def get_stats() -> StatsInfo:
         return [i._asdict() for i in make_iterable(freq)]
 
     stats["system"]["model"] = get_model() or "UNKNOWN"
+    stats["system"]["hostname"] = socket.gethostname()
 
     stats["cpu"]["freq"] = get_freq()
     stats["cpu"]["perc"] = make_iterable(psutil.cpu_percent(percpu=per_cpu))
